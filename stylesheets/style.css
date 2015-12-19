@@ -1,0 +1,14 @@
+body {
+    padding: 50px;
+}
+
+.nv {
+  fill: gray;
+  stroke: black;
+}
+
+.ny {
+  fill: #6473e2;
+  stroke: black;
+}
+

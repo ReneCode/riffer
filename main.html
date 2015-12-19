@@ -2,24 +2,57 @@
 <html>
 <head>
 	<title>Riffer</title>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<script type="text/javascript" src="javascript/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="javascript/main.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-6">
-				<h3>Chats</h3>
-				<div id="chatlist">
-				</div>
-			</div>
-			<div class="col-sm-6">
-				<h3>Messages</h3>
-			</div>
-		</div>
-
-	</div>
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Chats <span><button class="btn btn-default">+</button></span></h2>
+        <div id="chatlist">
+          <div class="well">
+            <h3>Paula</h3>
+          </div>
+          <div class="well">
+            <h3>Leonie</h3>
+          </div>
+          <div class="well">
+            <h3>Anna</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <h2>Messages</h2>
+        <div class="well">
+          <p>bla bla bla</p>
+          <p>hu hu hihi .....</p>
+          <p>was geht ab ? ey?</p>
+        </div>
+        <div>
+          <canvas id="canvas" style="border:1px solid black;" width="260" height="60">
+          </canvas>
+        </div>
+        <div class="well">
+          <p>Normal HTML here.</p>
+          <svg style="border:1px solid black;" width="400", height="100" background-color="yellow" fill-opacity:"0.5">
+            <rect class="nv" x="0" y="0" width="20" height="100"/>
+            <rect x="50" y="0" width="20" height="100" fill="brown" />
+            <rect x="80" y="0" width="50" height="100" fill="red" />
+            <rect x="160" y="0" width="50" height="100" fill="blue" />
+            <rect x="230" y="0" width="40" height="100" fill="yellow" />
+            <rect class="ny" x="280" y="0" width="20" height="100"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    <script src="javascript/main.js"></script>
 
 </body>
 </html>
