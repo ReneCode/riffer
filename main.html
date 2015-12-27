@@ -2,16 +2,17 @@
 <html>
 <head>
 	<title>Riffer</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="javascript/jquery-1.11.1.min.js"></script>
 </head>
 <body>
   
   <button data-sound="irHall.ogg" class="btn btn-primary" onclick="load_audio();">load</button>
 
-  <button data-sound="irHall.ogg" class="btn btn-primary" onclick="play_audio();">play</button>
+  <button class="btn btn-primary btn-lg" onclick="play_audio(1);">play-A</button>
+  <button class="btn btn-primary btn-lg" onclick="play_audio(2);">play-B</button>
 
   <div class="container">
     <div class="row">
@@ -32,11 +33,29 @@
       <div class="col-sm-6">
         <h2>Messages</h2>
         <div class="well">
-          <p>bla bla bla</p>
-          <p>hu hu hihi .....</p>
-          <p>was geht ab ? ey?</p>
+          <div class="row">
+            <div class="col-sm-2">
+              <button id="ckey" class="btn btn-info btn-lg btn-block"> C </button>
+            </div>
+            <div class="col-sm-2">
+              <button id="dkey" class="btn btn-info btn-lg btn-block"> D </button>
+            </div>
+            <div class="col-sm-2">
+              <button id="ekey" class="btn btn-info btn-lg btn-block"> E </button>
+            </div>
+            <div class="col-sm-2">
+              <button id="fkey" class="btn btn-info btn-lg btn-block"> F </button>
+            </div>
+            <div class="col-sm-2">
+              <button id="gkey" class="btn btn-info btn-lg btn-block"> G </button>
+            </div>
+          </div>
         </div>
-        <div>
+        <div class="well">
+          <button id="out1" class="btn btn-default btn-lg"> o1 </button>
+          <button id="out2" class="btn btn-default btn-lg"> o2 </button>
+        </div>
+        <div class="well">
           <canvas id="canvas" style="border:1px solid black;" width="260" height="60">
           </canvas>
         </div>
@@ -56,7 +75,7 @@
   </div>
   
     <script src="javascript/main.js"></script>
-    <script type="text/javascript" src="javascript/audio.js"></script>
+    <script src="javascript/audio.js"></script>
 
 </body>
 </html>
