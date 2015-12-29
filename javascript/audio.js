@@ -13,20 +13,7 @@ if (AudioContext) {
     alert("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox");
 }
 
-/*
-// Step 1 - Initialise the Audio Context
-// There can be only one!
-function init() {
-    if (typeof AudioContext !== "undefined") {
-        context = new AudioContext();
-    } else if (typeof webkitAudioContext !== "undefined") {
-        context = new webkitAudioContext();
-    } else {
-        throw new Error('AudioContext not supported. :(');
-    }
-}
 
-*/
 
 function log(msg) {
 	console.log(msg);
@@ -37,7 +24,8 @@ function log(msg) {
 function AudioSound(context, url) {
 
     var soundBuffer,
-        soundSource;
+        soundSource,
+        gainNode;
 
     // Step 2: Load our Sound using XHR
     function loadSound() {
@@ -57,17 +45,22 @@ function AudioSound(context, url) {
     }
 
     // Finally: tell the source when to start
-    function playSound(ev) {
+    function playSound() {
         // play the source now
         soundSource = context.createBufferSource();
         soundSource.buffer = soundBuffer;
-        soundSource.connect(context.destination);
-	    soundSource.start(0);
+        gainNode = context.createGain();
+        soundSource.connect(gainNode);
+        gainNode.connect(context.destination);
+	    soundSource.start(context.currentTime, 0.4, 1);
     }
 
-    function stopSound(ev) {
+    function stopSound() {
         // stop the source now
-        soundSource.stop();
+        var tim = context.currentTime;
+        gainNode.gain.value = 0.1;
+//        gainNode.gain.linearRampToValueAtTime(0);
+//        soundSource.stop(context.currentTime);
     }
 
 
@@ -85,17 +78,19 @@ function AudioSound(context, url) {
 var cSound, dSound, eSound, fSound, gSound;
 
 
-
-
 function handleEnd() {
 	soundC.stopSound();
 }
 function handle(selector, sound) {
-	$(selector).on("touchstart", sound.playSound );
-	$(selector).on("mousedown", sound.playSound );
+	$(selector).on("touchstart mousedown", function(ev) {
+		ev.preventDefault();
+		sound.playSound();
+	});
 
-	$(selector).on("touchend", sound.stopSound );
-	$(selector).on("mouseup", sound.stopSound );
+	$(selector).on("touchend mouseup", function(ev) {
+		ev.preventDefault();
+		sound.stopSound();
+	});
 
 }
 

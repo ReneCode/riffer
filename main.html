@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1.0">
+-->
 	<title>Riffer</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -8,11 +10,6 @@
     <script src="javascript/jquery-1.11.1.min.js"></script>
 </head>
 <body>
-  
-  <button data-sound="irHall.ogg" class="btn btn-primary" onclick="load_audio();">load</button>
-
-  <button class="btn btn-primary btn-lg" onclick="play_audio(1);">play-A</button>
-  <button class="btn btn-primary btn-lg" onclick="play_audio(2);">play-B</button>
 
   <div class="container">
     <div class="row">
@@ -35,25 +32,21 @@
         <div class="well">
           <div class="row">
             <div class="col-sm-2">
-              <button id="ckey" class="btn btn-info btn-lg btn-block"> C </button>
+              <button id="ckey" class="btn btn-info btn-block"> C </button>
             </div>
             <div class="col-sm-2">
-              <button id="dkey" class="btn btn-info btn-lg btn-block"> D </button>
+              <button id="dkey" class="btn btn-info btn-block"> D </button>
             </div>
             <div class="col-sm-2">
-              <button id="ekey" class="btn btn-info btn-lg btn-block"> E </button>
+              <button id="ekey" class="btn btn-info btn-block"> E </button>
             </div>
             <div class="col-sm-2">
-              <button id="fkey" class="btn btn-info btn-lg btn-block"> F </button>
+              <button id="fkey" class="btn btn-info btn-block"> F </button>
             </div>
             <div class="col-sm-2">
-              <button id="gkey" class="btn btn-info btn-lg btn-block"> G </button>
+              <button id="gkey" class="btn btn-info btn-block"> G </button>
             </div>
           </div>
-        </div>
-        <div class="well">
-          <button id="out1" class="btn btn-default btn-lg"> o1 </button>
-          <button id="out2" class="btn btn-default btn-lg"> o2 </button>
         </div>
         <div class="well">
           <canvas id="canvas" style="border:1px solid black;" width="260" height="60">
