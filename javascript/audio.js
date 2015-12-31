@@ -78,10 +78,7 @@ function AudioSound(context, url) {
 var cSound, dSound, eSound, fSound, gSound;
 
 
-function handleEnd() {
-	soundC.stopSound();
-}
-function handle(selector, sound) {
+function handleKeySound(selector, sound) {
 	$(selector).on("touchstart mousedown", function(ev) {
 		ev.preventDefault();
 		sound.playSound();
@@ -91,8 +88,45 @@ function handle(selector, sound) {
 		ev.preventDefault();
 		sound.stopSound();
 	});
-
 }
+
+
+function DrawRecorder(len) {
+    var self = this;
+
+    this.len = len;
+    this.interval = 50;        
+    this.maxTick = len / this.interval;
+    
+    this.start = function() {
+        this.countTick = 0;
+        this.idInterval = setInterval(this.tick, this.interval);
+    };
+
+    this.tick = function() {
+        self.countTick++;
+        if (self.countTick <= self.maxTick) {
+            self.draw();
+        } else {
+            clearInterval(self.idInterval);
+        }
+    };
+
+    this.draw = function() {
+        $svg = $("#recorder-svg")[0];
+        $("#recorder-arrow", $svg).attr("x", self.countTick*3);
+    };
+};
+
+function handleRecord(ev) {
+    ev.preventDefault();
+
+    var recorder = new DrawRecorder(4000);  // 4 sec.
+    recorder.start();
+
+    console.log("record");
+}
+
 
 function initialize() {
 	cSound = new AudioSound(audioContext, 'sound/c.wav');
@@ -101,16 +135,21 @@ function initialize() {
 	fSound = new AudioSound(audioContext, 'sound/f.wav');
 	gSound = new AudioSound(audioContext, 'sound/g.wav');
 
-	handle('#ckey', cSound);
-	handle('#dkey', dSound);
-	handle('#ekey', eSound);
-	handle('#fkey', fSound);
-	handle('#gkey', gSound);
+	handleKeySound('#ckey', cSound);
+	handleKeySound('#dkey', dSound);
+	handleKeySound('#ekey', eSound);
+	handleKeySound('#fkey', fSound);
+	handleKeySound('#gkey', gSound);
+
+    $('#record').on("touchstart click", handleRecord);
+
 
 }
 
-// document is ready 
-$( function() {
-	initialize()
-});
+// document is reay 
+$( function() {	
+
+
+    initialize()});
+
 

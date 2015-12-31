@@ -5,7 +5,7 @@
 -->
 	<title>Riffer</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="stylesheets/style.css">
     <script src="javascript/jquery-1.11.1.min.js"></script>
 </head>
@@ -13,7 +13,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <h2>Chats <span><button class="btn btn-default">+</button></span></h2>
         <div id="chatlist">
           <div class="well">
@@ -27,30 +27,29 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-8">
         <h2>Messages</h2>
         <div class="well">
-          <div class="row">
-            <div class="col-sm-2">
-              <button id="ckey" class="btn btn-info btn-block"> C </button>
+          <div class="btn-toolbar" role="toolbar">
+            <div class="btn-group btn-group-lg" role="group">
+              <button id="ckey" type="button" class="btn btn-info"> C </button>
+              <button id="dkey" type="button" class="btn btn-info"> D </button>
+              <button id="ekey" type="button" class="btn btn-info"> E </button>
+              <button id="fkey" type="button" class="btn btn-info"> F </button>
+              <button id="gkey" type="button" class="btn btn-info"> G </button>
             </div>
-            <div class="col-sm-2">
-              <button id="dkey" class="btn btn-info btn-block"> D </button>
-            </div>
-            <div class="col-sm-2">
-              <button id="ekey" class="btn btn-info btn-block"> E </button>
-            </div>
-            <div class="col-sm-2">
-              <button id="fkey" class="btn btn-info btn-block"> F </button>
-            </div>
-            <div class="col-sm-2">
-              <button id="gkey" class="btn btn-info btn-block"> G </button>
+            <div class="btn-group btn-group-lg" role="group">
+              <button id="record" class="btn btn-default" role="button"><i class="fa fa-dot-circle-o fa-2x"></i></button>
+              <button id="play" class="btn btn-default" role="button"><i class="fa fa-play fa-2x"></i></button>
             </div>
           </div>
         </div>
         <div class="well">
-          <canvas id="canvas" style="border:1px solid black;" width="260" height="60">
-          </canvas>
+          <svg id="recorder-svg" style="border:1px solid black;" width="400", height="100" background-color="yellow" fill-opacity:"0.5">
+            <rect id="recorder-arrow" x="0" y="0" width="2" height="100" fill="red" opaque="0.2"/>
+          </svg>
+          <button id="send" class="btn btn-default" role="button"><i class="fa fa-send fa-2x pull-right"></i></button>
+
         </div>
         <div class="well">
           <p>Normal HTML here.</p>
