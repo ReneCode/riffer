@@ -1,0 +1,28 @@
+{
+  "name": "riffer",
+  "version": "1.0.0",
+  "description": "my new project",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "watch": "gulp watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ReneCode/riffer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ReneCode/riffer/issues"
+  },
+  "homepage": "https://github.com/ReneCode/riffer",
+  "devDependencies": {
+    "expect": "^1.13.4",
+    "gulp": "^3.9.0",
+    "gulp-mocha": "^2.2.0"
+  }
+}
