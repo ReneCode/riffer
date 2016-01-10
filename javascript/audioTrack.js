@@ -14,6 +14,7 @@ function AudioTrack() {
 
 AudioTrack.prototype.start = function() {
 	this.startTime = (new Date().getTime());
+	this.result = [];
 };
 
 AudioTrack.prototype.getTrack = function() {
@@ -21,9 +22,8 @@ AudioTrack.prototype.getTrack = function() {
 }
 
 AudioTrack.prototype.on = function() {
-	this.start = this.elapsed();
-	console.log("start:", this.start);
-
+	this.onTime = this.elapsed();
+//	console.log("start:", this.start);
 }
 
 AudioTrack.prototype.elapsed = function() {
@@ -42,9 +42,9 @@ AudioTrack.prototype.quantysize = function(time) {
 
 AudioTrack.prototype.off = function() {
 	var elapsed = this.elapsed();
-	this.result.push( {start:this.start, width:elapsed - this.start})
+	this.result.push( {start:this.onTime, width:elapsed - this.onTime})
 }
 
 
-module.exports = AudioTrack;
+exports.AudioTrack = AudioTrack;
 

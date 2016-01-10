@@ -1,6 +1,6 @@
 "use strict"
 
-function audioContextCheck() {
+exports.create = function() {
     if (typeof AudioContext !== "undefined") {
         return new AudioContext();
     } else if (typeof webkitAudioContext !== "undefined") {
@@ -11,4 +11,4 @@ function audioContextCheck() {
         throw new Error('AudioContext not supported');
     }
 }
-var audioContext = audioContextCheck();
+

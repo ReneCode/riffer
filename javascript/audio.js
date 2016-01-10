@@ -1,3 +1,4 @@
+/*
 // search for a compa
 var AudioContext = window.AudioContext // Default
     || window.webkitAudioContext // Safari and old versions of Chrome
@@ -12,6 +13,13 @@ if (AudioContext) {
     // Alert the user
     alert("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox");
 }
+*/
+
+var AudioContext = require('./audioContext')
+var AudioTrack = require('./audioTrack').AudioTrack;
+
+
+var audioContext = AudioContext.create();
 
 
 
@@ -45,14 +53,20 @@ function AudioSound(context, url) {
     }
 
     // Finally: tell the source when to start
-    function playSound() {
+    function playSound(offset, duration) {
         // play the source now
+        if (!offset) {
+            offset = 0;
+        }
+        if (!duration) {
+            duration = 10;
+        }
         soundSource = context.createBufferSource();
         soundSource.buffer = soundBuffer;
         gainNode = context.createGain();
         soundSource.connect(gainNode);
         gainNode.connect(context.destination);
-	    soundSource.start(context.currentTime, 0.4, 1);
+	    soundSource.start(context.currentTime+offset, 0, duration); // , 0.4, 1);
     }
 
     function stopSound() {
@@ -77,6 +91,7 @@ function AudioSound(context, url) {
 
 var cSound, dSound, eSound, fSound, gSound;
 
+var audioTrack = new AudioTrack();
 
 function handleKeySound(selector, sound) {
 	$(selector).on("touchstart mousedown", function(ev) {
@@ -90,6 +105,23 @@ function handleKeySound(selector, sound) {
 	});
 }
 
+
+function handleKey(selector, handlerOn, handlerOff) {
+    if (handlerOn != undefined) {
+        $(selector).on("touchstart mousedown", function(ev) {
+            ev.preventDefault();
+            handlerOn();
+        });            
+    } 
+
+
+    if (handlerOff != undefined) {
+        $(selector).on("touchend mouseup", function(ev) {
+            ev.preventDefault();
+            handlerOff();
+        });            
+    } 
+}
 
 function DrawRecorder(len) {
     var self = this;
@@ -124,9 +156,33 @@ function handleRecord(ev) {
     var recorder = new DrawRecorder(4000);  // 4 sec.
     recorder.start();
 
+    audioTrack.start();
+
     console.log("record");
 }
+ 
+function handlePlay(ev) {
+    ev.preventDefault();
 
+    var track = audioTrack.getTrack();
+    playTrack(track)
+}
+
+
+function playTrack(track) {
+    track.forEach( function(note) {
+        console.log(note);
+        cSound.playSound(note.start/1000, note.width/1000);
+    });
+}
+function handleOn() {
+    audioTrack.on();
+}
+
+
+function handleOff() {
+    audioTrack.off();
+}
 
 function initialize() {
 	cSound = new AudioSound(audioContext, 'sound/c.wav');
@@ -142,7 +198,9 @@ function initialize() {
 	handleKeySound('#gkey', gSound);
 
     $('#record').on("touchstart click", handleRecord);
+    $('#play').on("touchstart click", handlePlay);
 
+    handleKey('#ckey', handleOn, handleOff)
 
 }
 

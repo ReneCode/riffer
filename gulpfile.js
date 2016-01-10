@@ -1,11 +1,19 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
+var browserify = require('gulp-browserify');
 
-var watching = false;
 
 function handleError(err) {
 	console.log(err.toString());
 }
+
+
+gulp.task('browserify', function() {
+  return gulp.
+    src('./javascript/audio.js').
+    pipe(browserify()).
+    pipe(gulp.dest('./bin'));
+});
 
 
 gulp.task('test', function() {

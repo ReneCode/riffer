@@ -1,6 +1,7 @@
 
 var AudioSound = require('../javascript/AudioSound');
-var AudioTrack = require('../javascript/AudioTrack.js');
+var AudioTrack = require('../javascript/AudioTrack.js').AudioTrack;
+
 
 //var AudioContext = require('../javascript/AudioContext');
 var assert = require('assert');
