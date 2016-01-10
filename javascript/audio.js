@@ -17,6 +17,7 @@ if (AudioContext) {
 
 var AudioContext = require('./audioContext')
 var AudioTrack = require('./audioTrack').AudioTrack;
+var AudioSound = require('./AudioSound').AudioSound;
 
 
 var audioContext = AudioContext.create();
@@ -28,67 +29,6 @@ function log(msg) {
 }
 
 
-
-function AudioSound(context, url) {
-
-    var soundBuffer,
-        soundSource,
-        gainNode;
-
-    // Step 2: Load our Sound using XHR
-    function loadSound() {
-        // Note: this loads asynchronously
-        var request = new XMLHttpRequest();
-        request.open("GET", url, true);
-        request.responseType = "arraybuffer";
-
-        // Our asynchronous callback
-        request.onload = function() {
-        	context.decodeAudioData(request.response, function(buffer) {
-        		soundBuffer = buffer;
-        	});
-        };
-
-        request.send();
-    }
-
-    // Finally: tell the source when to start
-    function playSound(offset, duration) {
-        // play the source now
-        if (!offset) {
-            offset = 0;
-        }
-        if (!duration) {
-            duration = 10;
-        }
-        soundSource = context.createBufferSource();
-        soundSource.buffer = soundBuffer;
-        gainNode = context.createGain();
-        soundSource.connect(gainNode);
-        gainNode.connect(context.destination);
-	    soundSource.start(context.currentTime+offset, 0, duration); // , 0.4, 1);
-    }
-
-    function stopSound() {
-        // stop the source now
-        var tim = context.currentTime;
-        gainNode.gain.value = 0.1;
-//        gainNode.gain.linearRampToValueAtTime(0);
-//        soundSource.stop(context.currentTime);
-    }
-
-
-
-    loadSound();
-
-    return {
-    	playSound: playSound,
-    	stopSound: stopSound
-    }
-
-}
-
-
 var cSound, dSound, eSound, fSound, gSound;
 
 var audioTrack = new AudioTrack();
@@ -96,12 +36,12 @@ var audioTrack = new AudioTrack();
 function handleKeySound(selector, sound) {
 	$(selector).on("touchstart mousedown", function(ev) {
 		ev.preventDefault();
-		sound.playSound();
+		sound.play();
 	});
 
 	$(selector).on("touchend mouseup", function(ev) {
 		ev.preventDefault();
-		sound.stopSound();
+		sound.stop();
 	});
 }
 

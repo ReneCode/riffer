@@ -9,7 +9,8 @@
   "scripts": {
     "test": "gulp test",
     "watch": "gulp watch",
-    "browserify": "gulp browserify"
+    "browserify": "gulp browserify",
+    "watch-browserify": "gulp watch-browserify"
   },
   "repository": {
     "type": "git",

@@ -15,6 +15,9 @@ gulp.task('browserify', function() {
     pipe(gulp.dest('./bin'));
 });
 
+gulp.task('watch-browserify', function() {
+	gulp.watch(['./javascript/*.js'], ['browserify']);
+});
 
 gulp.task('test', function() {
 	gulp.src('./test/*.js')	
@@ -25,4 +28,5 @@ gulp.task('test', function() {
 gulp.task('watch', ['test'], function() {
 	gulp.watch(['./test/*.js', './javascript/*.js'], ['test']);
 });
+
 
