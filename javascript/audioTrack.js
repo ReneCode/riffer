@@ -1,20 +1,41 @@
 "use strict"
 
-function AudioTrack() {
+function AudioTrack(option) {
+	if (!option) {
+		option = {
+			bpm: 120,					// 120 beats per minute
+			maxNoteRatio: 16,	// min note is 1/16
+			maxLength: 4			// length in seconds
+		}
+	}
 	this.running = false;
 	this.result = [];
 	this.startTime = undefined;
-	this.bpm = 120;
-	this.maxNoteRatio = 16;
+	this.bpm = option.bpm || 120;
+	this.maxNoteRatio = option.maxNoteRatio || 16;
+	this.maxLength = option.maxLength || 4;
+	this.stopCallback = option.stopCallback;
+	this.beatCallback = option.beatCallback;
 	// in ms
 	this.quant = 60000 / this.bpm / 16;
 };
 
 
+AudioTrack.prototype.stop = function() {
+	clearInterval(this.intervalBeat);
+	if (this.stopCallback) {
+		this.stopCallback(this);
+	}
+}
 
 AudioTrack.prototype.start = function() {
 	this.startTime = (new Date().getTime());
 	this.result = [];
+	setTimeout( this.stop, this.maxLength * 1000);
+	if (this.beatCallback) {
+		var tick = 60 * 1000 / this.bpm;
+		this.intervalBeat = setInterval(this.beatCallback, 60 * 1000 / this.bpm);
+	}
 };
 
 AudioTrack.prototype.getTrack = function() {

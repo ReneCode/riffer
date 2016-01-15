@@ -1,5 +1,5 @@
 
-var AudioSound = require('../javascript/AudioSound');
+var AudioSound = require('../javascript/AudioSound').AudioSound;
 var AudioTrack = require('../javascript/AudioTrack.js').AudioTrack;
 
 
@@ -9,6 +9,8 @@ var expect = require('expect');
 
 describe('AudioSound', function() {
 
+	// there has to be some fake XMLHttpRequest object
+	
 	it ('can be created', function() {
 		var as = new AudioSound();		
 		assert.equal(typeof(as), 'object');
@@ -85,6 +87,27 @@ describe('AudioTrack', function() {
 		}, 60);
 	})
 
+
+	it ('call the beatCallback n times (n depends on bpm)', function(done) {
+		var cbCount = 0;
+		var cb = function() {
+			cbCount++;
+		};
+		var numBeats = 8;
+		var bpm = 160;
+		var beatLen = 60/bpm;
+
+		// expand the mocha-default-test timeout
+		this.timeout(1000*beatLen * (numBeats+1) );
+
+		at = new AudioTrack({beatCallback:cb, bpm:bpm});
+		at.start();
+		setTimeout( function() {
+			at.stop();
+			expect(cbCount).toEqual(numBeats);
+			done();
+		}, 50 + 1000*beatLen*numBeats);		// add 50 ms so we do not stop an a beat-boundary
+	})
 
 })
 
