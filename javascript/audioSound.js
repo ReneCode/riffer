@@ -1,12 +1,17 @@
 
-function AudioSound(context, url) {
+function AudioSound(context, option) {
 	this.context = context;
-	this.url = url;
+  if (!option) {
+    option = {}
+  }
+	this.url = option.url;
 	this.soundBuffer = undefined;
   this.soundSource = undefined;
   this.gainNode = undefined;
 
-  this.load(context, url);
+  if (this.url) {
+    this.load(context, this.url);
+  }
 }
 
 AudioSound.prototype.load = function(context, url) {

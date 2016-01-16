@@ -103,7 +103,7 @@ describe('AudioTrack', function() {
 	})
 
 
-	it ('call the beatCallback n times (n depends on bpm)', function(done) {
+	it ('should call the beatCallback n times (n depends on bpm)', function(done) {
 		var cbCount = 0;
 		var cb = function() {
 			cbCount++;
@@ -123,6 +123,31 @@ describe('AudioTrack', function() {
 			done();
 		}, 1000*beatLen*numBeats - 50);		// sub 50 ms so we do not stop an a beat-boundary
 	})
+
+	it ('should stop after 3 bars', function(done) {
+		var cbCount = 0;
+		var cb = function() {
+			cbCount++;
+		};
+		var bars = 3;
+		var bpm = 160;
+		var beatLen = 60/bpm;
+		var beatsPerBar = 5;
+
+		// expand the mocha-default-test timeout
+		var timeout = 1000 * beatLen *  bars * beatsPerBar;
+		this.timeout(timeout + 500);
+
+		at = new AudioTrack({beatCallback:cb, bpm:bpm, beatsPerBar:beatsPerBar});
+		at.start();
+		setTimeout( function() {
+			at.stop();
+			expect(cbCount).toEqual(beatsPerBar * bars);
+			done();
+		}, timeout );
+
+	})
+
 
 })
 

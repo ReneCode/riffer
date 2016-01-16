@@ -31,7 +31,11 @@ function log(msg) {
 
 var cSound, dSound, eSound, fSound, gSound;
 
-var audioTrack = new AudioTrack();
+var audioTrack = new AudioTrack({beatCallback:beatCallback});
+
+function beatCallback() {
+    cSound.play();
+}
 
 function handleKeySound(selector, sound) {
 	$(selector).on("touchstart mousedown", function(ev) {
@@ -124,12 +128,13 @@ function handleOff() {
     audioTrack.off();
 }
 
+
 function initialize() {
-	cSound = new AudioSound(audioContext, 'sound/c.wav');
-	dSound = new AudioSound(audioContext, 'sound/d.wav');
-	eSound = new AudioSound(audioContext, 'sound/e.wav');
-	fSound = new AudioSound(audioContext, 'sound/f.wav');
-	gSound = new AudioSound(audioContext, 'sound/g.wav');
+	cSound = new AudioSound(audioContext, {url:'sound/c.wav'});
+	dSound = new AudioSound(audioContext, {url:'sound/d.wav'});
+	eSound = new AudioSound(audioContext, {url:'sound/e.wav'});
+	fSound = new AudioSound(audioContext, {url:'sound/f.wav'});
+	gSound = new AudioSound(audioContext, {url:'sound/g.wav'});
 
 	handleKeySound('#ckey', cSound);
 	handleKeySound('#dkey', dSound);
