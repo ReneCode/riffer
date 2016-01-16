@@ -34,6 +34,7 @@ AudioTrack.prototype.start = function() {
 	setTimeout( this.stop, this.maxLength * 1000);
 	if (this.beatCallback) {
 		var tick = 60 * 1000 / this.bpm;
+		this.beatCallback();
 		this.intervalBeat = setInterval(this.beatCallback, 60 * 1000 / this.bpm);
 	}
 };

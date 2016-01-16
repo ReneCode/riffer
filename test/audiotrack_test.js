@@ -1,7 +1,7 @@
 
 var AudioSound = require('../javascript/AudioSound').AudioSound;
 var AudioTrack = require('../javascript/AudioTrack.js').AudioTrack;
-
+var sinon = require('sinon');
 
 //var AudioContext = require('../javascript/AudioContext');
 var assert = require('assert');
@@ -10,7 +10,22 @@ var expect = require('expect');
 describe('AudioSound', function() {
 
 	// there has to be some fake XMLHttpRequest object
-	
+
+	var xhr, requests;
+
+	before(function () {
+	    xhr = sinon.useFakeXMLHttpRequest();
+	    global.XMLHttpRequest = xhr;
+	    requests = [];
+	    xhr.onCreate = function (req) { requests.push(req); };
+	});
+
+	after(function () {
+	    // Like before we must clean up when tampering with globals.
+	    xhr.restore();
+	});
+
+
 	it ('can be created', function() {
 		var as = new AudioSound();		
 		assert.equal(typeof(as), 'object');
@@ -106,7 +121,7 @@ describe('AudioTrack', function() {
 			at.stop();
 			expect(cbCount).toEqual(numBeats);
 			done();
-		}, 50 + 1000*beatLen*numBeats);		// add 50 ms so we do not stop an a beat-boundary
+		}, 1000*beatLen*numBeats - 50);		// sub 50 ms so we do not stop an a beat-boundary
 	})
 
 })
