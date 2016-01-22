@@ -134,6 +134,8 @@ function handleRecord(ev) {
 //    recorder.start();
 
     $('#recorder-svg').empty();
+
+    $('#draw').append('<svg:rect width:50 height:30 />');
     audioTrack.start();
 
     console.log("record");

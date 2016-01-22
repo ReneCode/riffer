@@ -20,13 +20,13 @@ describe('TrackView', function() {
 
 	it('should convert empty track to empty svg', function() {
 		var svg = tv.convert();
-		expect(svg).toBe('');
+		expect(svg).toEqual([]);
 	})
 
 	it('should convert one note track to rect svg', function() {
 		var at = {length:2000,notes:[{start:200,width:50}]}
 		var svg = tv.convert(at);
-		expect(svg).toBe('<rect x="40" y="0" width="10" height="80"/>');
+		expect(svg).toEqual([{x:40, y:0, width:10, height:80}]);
 	})
 
 	it('should convert two note track to rect svg', function() {
@@ -34,8 +34,8 @@ describe('TrackView', function() {
 				{start:100,width:50},
 				{start:200,width:50} ] };
 		var svg = tv.convert(at);
-		expect(svg).toBe('<rect x="20" y="0" width="10" height="80"/>' + 
-										 '<rect x="40" y="0" width="10" height="80"/>');
+		expect(svg).toEqual([{x:20, y:0, width:10, height:80},
+									{x:40, y:0, width:10, height:80}]);
 	})
 
 
