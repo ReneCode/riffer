@@ -1,3 +1,4 @@
+"use strict"
 
 function TrackView(option) {
 	if (!option) {
@@ -16,8 +17,21 @@ function TrackView(option) {
 TrackView.prototype.convert = function(track) {
 	var sView = "";
 
-	view = "<svg>" + sView + "</svg>";
-	return view;
+
+	// <rect x="50" y="0" width="20" height="100" fill="brown" />
+
+
+	if (track && track.notes) {
+		var height = this.height;
+		var xScale = this.width / track.length;
+		track.notes.forEach(function(n) {
+			var x = Math.floor(n.start * xScale);
+			var w = Math.floor(n.width * xScale);
+			sView += '<rect x="' + x + '" y="0" width="' + w + '" height="' + height + '" fill="blue"/>' 
+		});
+	}
+
+	return sView;
 };
 
 exports.TrackView = TrackView;

@@ -23,10 +23,12 @@ function AudioTrack(option) {
 
 	this.tick = 60 * 1000 / this.bpm;
 	this.length = this.tick * this.beatsPerBar * this.bars;
+	this.recording = false;
 };
 
 
 AudioTrack.prototype.stop = function() {
+	this.recording = false;
 	clearInterval(this.intervalBeat);
 	if (this.stopCallback) {
 		this.stopCallback(this);
@@ -36,6 +38,7 @@ AudioTrack.prototype.stop = function() {
 AudioTrack.prototype.start = function() {
 	this.startTime = (new Date().getTime());
 	this.notes = [];
+	this.recording = true;
 	setTimeout( this.stop.bind(this), this.length );
 	if (this.beatCallback) {
 		this.beatCallback();

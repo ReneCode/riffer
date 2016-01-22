@@ -18,6 +18,7 @@ if (AudioContext) {
 var AudioContext = require('./audioContext')
 var AudioTrack = require('./audioTrack').AudioTrack;
 var AudioSound = require('./AudioSound').AudioSound;
+var TrackView = require('./TrackView').TrackView;
 
 
 var audioContext = AudioContext.create();
@@ -29,13 +30,41 @@ function log(msg) {
 }
 
 
+
 var cSound, dSound, eSound, fSound, gSound;
 
-var audioTrack = new AudioTrack({beatCallback:beatCallback});
+var audioTrack = new AudioTrack({bars:1, beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
 function beatCallback() {
     cSound.play();
 }
+
+function stopAudioTrack(at) {
+    var track = at.getTrack();
+
+    var w = $('#recorder-svg').attr('width');
+    var h = $('#recorder-svg').attr('height');
+    var trackView = new TrackView({width:w, height:h});
+    var view = trackView.convert(track);
+    console.log(view);
+
+
+    var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
+
+    newElement.setAttribute("fill", "#ff0000");
+    newElement.setAttribute("width", "200px");
+    newElement.setAttribute("height", "200px");
+/*    $(newElement).attr("x", "200");
+    $(newElement).attr("y", "0");
+    $(newElement).attr("width", "200");
+    $(newElement).attr("height", "70");
+    $(newElement).attr("full", "blue");
+*/
+
+
+    $('#recorder-svg').append(newElement);
+}
+
 
 function handleKeySound(selector, sound) {
 	$(selector).on("touchstart mousedown", function(ev) {
@@ -50,22 +79,25 @@ function handleKeySound(selector, sound) {
 }
 
 
-function handleKey(selector, handlerOn, handlerOff) {
-    if (handlerOn != undefined) {
-        $(selector).on("touchstart mousedown", function(ev) {
-            ev.preventDefault();
-            handlerOn();
-        });            
-    } 
+function handleKeySound(selector, sound, handlerOn, handlerOff) {
+    $(selector).on("touchstart mousedown", function(ev) {
+        ev.preventDefault();
+        sound.play();
+    if (handlerOn){
+      handlerOn(sound);
+    }
+    });
 
-
-    if (handlerOff != undefined) {
-        $(selector).on("touchend mouseup", function(ev) {
-            ev.preventDefault();
-            handlerOff();
-        });            
-    } 
+    $(selector).on("touchend mouseup", function(ev) {
+        ev.preventDefault();
+        sound.stop();
+    if (handlerOff) {
+      handlerOff(sound);
+    }
+    });
 }
+
+
 
 function DrawRecorder(len) {
     var self = this;
@@ -97,8 +129,8 @@ function DrawRecorder(len) {
 function handleRecord(ev) {
     ev.preventDefault();
 
-    var recorder = new DrawRecorder(4000);  // 4 sec.
-    recorder.start();
+//    var recorder = new DrawRecorder(4000);  // 4 sec.
+//    recorder.start();
 
     audioTrack.start();
 
@@ -108,8 +140,9 @@ function handleRecord(ev) {
 function handlePlay(ev) {
     ev.preventDefault();
 
-    var track = audioTrack.getTrack();
-    playTrack(track)
+
+//    var track = audioTrack.getTrack();
+//    playTrack(track)
 }
 
 
@@ -120,12 +153,16 @@ function playTrack(track) {
     });
 }
 function handleOn() {
-    audioTrack.on();
+    if (audioTrack.recording) {
+        audioTrack.on();
+    }
 }
 
 
 function handleOff() {
-    audioTrack.off();
+    if (audioTrack.recording) {
+        audioTrack.off();
+    }
 }
 
 
@@ -136,16 +173,16 @@ function initialize() {
 	fSound = new AudioSound(audioContext, {url:'sound/f.wav'});
 	gSound = new AudioSound(audioContext, {url:'sound/g.wav'});
 
-	handleKeySound('#ckey', cSound);
-	handleKeySound('#dkey', dSound);
-	handleKeySound('#ekey', eSound);
-	handleKeySound('#fkey', fSound);
-	handleKeySound('#gkey', gSound);
+    handleKeySound('#ckey', cSound, handleOn, handleOff);
+    handleKeySound('#dkey', dSound, handleOn, handleOff);
+    handleKeySound('#ekey', eSound, handleOn, handleOff);
+    handleKeySound('#fkey', fSound, handleOn, handleOff);
+    handleKeySound('#gkey', gSound, handleOn, handleOff);    
 
     $('#record').on("touchstart click", handleRecord);
     $('#play').on("touchstart click", handlePlay);
 
-    handleKey('#ckey', handleOn, handleOff)
+//    handleKey('#ckey', handleOn, handleOff)
 
 }
 

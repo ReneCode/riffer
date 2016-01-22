@@ -51,7 +51,8 @@ AudioSound.prototype.play = function(offset, duration) {
 AudioSound.prototype.stop = function() {
   // stop the source now
   var tim = this.context.currentTime;
-  gainNode.gain.value = 0.1;
+  this.soundSource.stop(this.context.currentTime);
+//  gainNode.gain.value = 0.1;
 //        gainNode.gain.linearRampToValueAtTime(0);
 //        soundSource.stop(context.currentTime);
 };

@@ -5,7 +5,7 @@ var expect = require('expect');
 describe('TrackView', function() {
 	var tv;
 	beforeEach(function() {
-		tv = new TrackView();
+		tv = new TrackView({width:400, height:80});
 	})
 
 	it('should be able to create', function() {
@@ -20,13 +20,22 @@ describe('TrackView', function() {
 
 	it('should convert empty track to empty svg', function() {
 		var svg = tv.convert();
-		expect(svg).toBe('<svg></svg>');
+		expect(svg).toBe('');
 	})
 
-	it('should convert simple track to rect svg', function() {
-		var at = {len:2000,notes:[{s:100,w:50}]}
-		var svg = tv.convert();
-		expect(svg).toBe('<svg></svg>');
+	it('should convert one note track to rect svg', function() {
+		var at = {length:2000,notes:[{start:200,width:50}]}
+		var svg = tv.convert(at);
+		expect(svg).toBe('<rect x="40" y="0" width="10" height="80"/>');
+	})
+
+	it('should convert two note track to rect svg', function() {
+		var at = {length:2000,notes:[
+				{start:100,width:50},
+				{start:200,width:50} ] };
+		var svg = tv.convert(at);
+		expect(svg).toBe('<rect x="20" y="0" width="10" height="80"/>' + 
+										 '<rect x="40" y="0" width="10" height="80"/>');
 	})
 
 

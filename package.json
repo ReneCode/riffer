@@ -11,7 +11,7 @@
     "watch": "gulp watch",
     "browserify": "gulp browserify",
     "watch-browserify": "gulp watch-browserify",
-    "server": "http-server"
+    "server": "http-server -c-1"
   },
   "repository": {
     "type": "git",
