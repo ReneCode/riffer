@@ -2,7 +2,7 @@
 function AudioSound(context, option) {
 	this.context = context;
   if (!option) {
-    option = {}
+    option = {};
   }
 	this.url = option.url;
 	this.soundBuffer = undefined;
@@ -49,12 +49,8 @@ AudioSound.prototype.play = function(offset, duration) {
 };
 
 AudioSound.prototype.stop = function() {
-  // stop the source now
   var tim = this.context.currentTime;
   this.soundSource.stop(this.context.currentTime);
-//  gainNode.gain.value = 0.1;
-//        gainNode.gain.linearRampToValueAtTime(0);
-//        soundSource.stop(context.currentTime);
 };
 
 exports.AudioSound = AudioSound;

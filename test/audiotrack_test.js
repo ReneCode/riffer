@@ -29,8 +29,8 @@ describe('AudioSound', function() {
 	it ('can be created', function() {
 		var as = new AudioSound();		
 		assert.equal(typeof(as), 'object');
-	})
-})
+	});
+});
 
 
 describe('AudioTrack', function() {
@@ -42,34 +42,34 @@ describe('AudioTrack', function() {
 
 	it ('can be created', function() {
 		expect(at).toBeA('object');
-	})
+	});
 
 	it ('has a start function', function() {
 		expect(at.start).toExist();
-	})
+	});
 
 	it ('has a getTrack function', function() {
 		expect(at.getTrack).toExist();
-	})
+	});
 
 	it ('gets an empty array without input', function() {
 		expect(at.getTrack().notes).toEqual([]);
-	})
+	});
 
 	it ('should calc the length', function() {
 		expect(at.length).toBe(8000);
-	})
+	});
 
 	it ('should calc the length', function() {
-		at = new AudioTrack({beatsPerBar:6, bars:2, bpm:180})
+		at = new AudioTrack({beatsPerBar:6, bars:2, bpm:180});
 		// 4000 ms =  60/180 * 6 * 2 * 1000
 		expect(at.length).toBe(4000);
-	})
+	});
 
 	it ('should return length in getTrack()', function() {
 		var len = at.length;
 		expect(at.getTrack().length).toBe(len);
-	})
+	});
 
 	it ('quantize on 1/16 not of 120 bpm', function() {
 		expect(at.quantysize(3)).toEqual(0);
@@ -79,7 +79,7 @@ describe('AudioTrack', function() {
 		expect(at.quantysize(3125)).toEqual(3125);
 		expect(at.quantysize(3124)).toEqual(3125);
 		expect(at.quantysize(3126)).toEqual(3125);
-	})
+	});
 
 	it ('records single 100 ms on()-event', function(done) {
 		at.start();
@@ -90,9 +90,9 @@ describe('AudioTrack', function() {
 				var notes = at.getTrack().notes;
 				expect(notes).toEqual([{start:62, width:94}]);
 				done();
-			}, 100)
+			}, 100);
 		}, 50);
-	})
+	});
 
 
 	it ('records single 100 ms on()-event', function(done) {
@@ -115,9 +115,9 @@ describe('AudioTrack', function() {
 						done();
 					}, 180);
 				}, 60);
-			}, 90)
+			}, 90);
 		}, 60);
-	})
+	});
 
 
 	it ('should call the beatCallback n times (n depends on bpm)', function(done) {
@@ -139,7 +139,7 @@ describe('AudioTrack', function() {
 			expect(cbCount).toEqual(numBeats);
 			done();
 		}, 1000*beatLen*numBeats - 50);		// sub 50 ms so we do not stop an a beat-boundary
-	})
+	});
 
 	it ('should stop beat after 3 bars', function(done) {
 		var cbCount = 0;
@@ -162,7 +162,7 @@ describe('AudioTrack', function() {
 			done();
 		}, timeout +1000 );
 
-	})
+	});
 
 	it ('should stop automaticly', function(done) {
 		var stopCalled = false;
@@ -172,7 +172,7 @@ describe('AudioTrack', function() {
 			// track is the audioTrack that has stopped
 			expect(track.bpm).toEqual(bpm);
 			done();
-		}
+		};
 
 		var bpm=160,
 				beatsPerBar=4,
@@ -181,9 +181,8 @@ describe('AudioTrack', function() {
 		this.timeout(timeout);
 		at = new AudioTrack({stopCallback:cbStop, bpm:bpm, beatsPerBar:beatsPerBar, bars:bars});
 		at.start();
+	});
 
-	})
-
-})
+});
 
 

@@ -1,11 +1,12 @@
-"use strict"
 
 function TrackView(option) {
+	"use strict";
+
 	if (!option) {
 		option = {
 			width: 200,
 			height: 50
-		}
+		};
 	}
 	this.width = option.width || 200;
 	this.height = option.height || 50;
@@ -15,6 +16,8 @@ function TrackView(option) {
 
 
 TrackView.prototype.convert = function(track) {
+	"use strict";
+
 	var view = [];
 
 	if (track && track.notes) {

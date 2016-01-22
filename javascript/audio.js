@@ -15,30 +15,33 @@ if (AudioContext) {
 }
 */
 
-var AudioContext = require('./audioContext')
+var AudioContext = require('./audioContext');
 var AudioTrack = require('./audioTrack').AudioTrack;
 var AudioSound = require('./AudioSound').AudioSound;
 var TrackView = require('./TrackView').TrackView;
-
+var AudioBeep = require('./AudioBeep').AudioBeep;
 
 var audioContext = AudioContext.create();
-
-
 
 function log(msg) {
 	console.log(msg);
 }
 
 
+var cSound, dSound, eSound, fSound, gSound, beepSoundA, beepSoundB;
 
-var cSound, dSound, eSound, fSound, gSound;
+var audioTrack = new AudioTrack({bpm:120, bars:1, beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
-var audioTrack = new AudioTrack({bars:2, beatCallback:beatCallback, stopCallback:stopAudioTrack});
+function beatCallback(first) {
+    if (first) {
+        beepSoundA.play();    
+    } 
+    else {
+        beepSoundB.play();    
+    }
+ }
 
-function beatCallback() {
-    cSound.play();
-}
-
+// get recorded Track and show it as SVG
 function stopAudioTrack(at) {
     var track = at.getTrack();
 
@@ -54,16 +57,7 @@ function stopAudioTrack(at) {
         }
 
         $('#recorder-svg').append(newElement);
-    })
-
-/*    $(newElement).attr("x", "200");
-    $(newElement).attr("y", "0");
-    $(newElement).attr("width", "200");
-    $(newElement).attr("height", "70");
-    $(newElement).attr("full", "blue");
-*/
-
-
+    });
 }
 
 
@@ -100,62 +94,28 @@ function handleKeySound(selector, sound, handlerOn, handlerOff) {
 
 
 
-function DrawRecorder(len) {
-    var self = this;
-
-    this.len = len;
-    this.interval = 50;        
-    this.maxTick = len / this.interval;
-    
-    this.start = function() {
-        this.countTick = 0;
-        this.idInterval = setInterval(this.tick, this.interval);
-    };
-
-    this.tick = function() {
-        self.countTick++;
-        if (self.countTick <= self.maxTick) {
-            self.draw();
-        } else {
-            clearInterval(self.idInterval);
-        }
-    };
-
-    this.draw = function() {
-        $svg = $("#recorder-svg")[0];
-        $("#recorder-arrow", $svg).attr("x", self.countTick*3);
-    };
-};
-
 function handleRecord(ev) {
     ev.preventDefault();
-
-//    var recorder = new DrawRecorder(4000);  // 4 sec.
-//    recorder.start();
-
     $('#recorder-svg').empty();
-
-    $('#draw').append('<svg:rect width:50 height:30 />');
     audioTrack.start();
-
-    console.log("record");
 }
  
 function handlePlay(ev) {
     ev.preventDefault();
 
 
-//    var track = audioTrack.getTrack();
-//    playTrack(track)
+   var track = audioTrack.getTrack();
+   playTrack(track);
 }
 
 
 function playTrack(track) {
-    track.forEach( function(note) {
+    track.notes.forEach( function(note) {
         console.log(note);
-        cSound.playSound(note.start/1000, note.width/1000);
+        cSound.play(note.start/1000, note.width/1000);
     });
 }
+
 function handleOn() {
     if (audioTrack.recording) {
         audioTrack.on();
@@ -176,6 +136,8 @@ function initialize() {
 	eSound = new AudioSound(audioContext, {url:'sound/e.wav'});
 	fSound = new AudioSound(audioContext, {url:'sound/f.wav'});
 	gSound = new AudioSound(audioContext, {url:'sound/g.wav'});
+    beepSoundA = new AudioBeep(audioContext, {frequency:2300});
+    beepSoundB = new AudioBeep(audioContext, {frequency:2000});
 
     handleKeySound('#ckey', cSound, handleOn, handleOff);
     handleKeySound('#dkey', dSound, handleOn, handleOff);
@@ -193,7 +155,7 @@ function initialize() {
 // document is reay 
 $( function() {	
 
-
-    initialize()});
+    initialize();
+});
 
 

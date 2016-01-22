@@ -1,13 +1,13 @@
-"use strict"
 
 function AudioTrack(option) {
+	"use strict";
 	if (!option) {
 		option = {
 			bpm: 120,					// 120 beats per minute
 			maxNoteRatio: 16,	// min note is 1/16
 			bars: 4,					// number of bars
 			beatsPerBar: 4		// beats per bar
-		}
+		};
 	}
 	this.running = false;
 	this.notes = [];
@@ -24,41 +24,59 @@ function AudioTrack(option) {
 	this.tick = 60 * 1000 / this.bpm;
 	this.length = this.tick * this.beatsPerBar * this.bars;
 	this.recording = false;
-};
+}
 
 
 AudioTrack.prototype.stop = function() {
+	"use strict";
 	this.recording = false;
 	clearInterval(this.intervalBeat);
 	if (this.stopCallback) {
 		this.stopCallback(this);
 	}
-}
+};
+
+
+AudioTrack.prototype.beat = function() {
+	"use strict";
+	if (this.beatCallback) {
+		// first-beat will called with (true)
+		var first = false;
+		if (this.beatCounter % this.beatsPerBar === 0) {
+			first = true;
+		}
+		this.beatCallback(first);
+		this.beatCounter++;
+	}
+};
 
 AudioTrack.prototype.start = function() {
+	"use strict";
 	this.startTime = (new Date().getTime());
 	this.notes = [];
 	this.recording = true;
+	this.beatCounter = 0;
 	setTimeout( this.stop.bind(this), this.length );
 	if (this.beatCallback) {
-		this.beatCallback();
-		this.intervalBeat = setInterval(this.beatCallback, this.tick);
+		this.beat();
+		this.intervalBeat = setInterval(this.beat.bind(this), this.tick);
 	}
 };
 
 AudioTrack.prototype.getTrack = function() {
 	return {length:this.length, notes:this.notes};
-}
+};
 
 AudioTrack.prototype.on = function() {
 	this.onTime = this.elapsed();
 //	console.log("start:", this.start);
-}
+};
+
 
 AudioTrack.prototype.elapsed = function() {
 	var elapsed = new Date().getTime() - this.startTime;
 	return this.quantysize(elapsed);
-}
+};
 
 AudioTrack.prototype.quantysize = function(time) {
 	var mod = time % this.quant;
@@ -67,12 +85,12 @@ AudioTrack.prototype.quantysize = function(time) {
 		time += this.quant;
 	}
 	return Math.floor(time);
-}
+};
 
 AudioTrack.prototype.off = function() {
 	var elapsed = this.elapsed();
-	this.notes.push( {start:this.onTime, width:elapsed - this.onTime})
-}
+	this.notes.push( {start:this.onTime, width:elapsed - this.onTime});
+};
 
 
 exports.AudioTrack = AudioTrack;
