@@ -10,7 +10,8 @@
     "test": "gulp test",
     "watch": "gulp watch",
     "browserify": "gulp browserify",
-    "watch-browserify": "gulp watch-browserify"
+    "watch-browserify": "gulp watch-browserify",
+    "server": "http-server"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-mocha": "^2.2.0",
+    "http-server": "^0.8.5",
     "jshint": "^2.8.0",
     "sinon": "^1.17.2"
   }

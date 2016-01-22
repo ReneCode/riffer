@@ -5,11 +5,12 @@ function AudioTrack(option) {
 		option = {
 			bpm: 120,					// 120 beats per minute
 			maxNoteRatio: 16,	// min note is 1/16
-			bars: 4						// length in seconds
+			bars: 4,					// number of bars
+			beatsPerBar: 4		// beats per bar
 		}
 	}
 	this.running = false;
-	this.result = [];
+	this.notes = [];
 	this.startTime = undefined;
 	this.bpm = option.bpm || 120;
 	this.maxNoteRatio = option.maxNoteRatio || 16;
@@ -19,6 +20,9 @@ function AudioTrack(option) {
 	this.beatCallback = option.beatCallback;
 	// in ms
 	this.quant = 60000 / this.bpm / 16;
+
+	this.tick = 60 * 1000 / this.bpm;
+	this.length = this.tick * this.beatsPerBar * this.bars;
 };
 
 
@@ -31,17 +35,16 @@ AudioTrack.prototype.stop = function() {
 
 AudioTrack.prototype.start = function() {
 	this.startTime = (new Date().getTime());
-	this.result = [];
-	var tick = 60 * 1000 / this.bpm;
-	setTimeout( this.stop.bind(this), this.beatsPerBar * this.bars * tick );
+	this.notes = [];
+	setTimeout( this.stop.bind(this), this.length );
 	if (this.beatCallback) {
 		this.beatCallback();
-		this.intervalBeat = setInterval(this.beatCallback, tick);
+		this.intervalBeat = setInterval(this.beatCallback, this.tick);
 	}
 };
 
 AudioTrack.prototype.getTrack = function() {
-	return this.result;
+	return {length:this.length, notes:this.notes};
 }
 
 AudioTrack.prototype.on = function() {
@@ -65,7 +68,7 @@ AudioTrack.prototype.quantysize = function(time) {
 
 AudioTrack.prototype.off = function() {
 	var elapsed = this.elapsed();
-	this.result.push( {start:this.onTime, width:elapsed - this.onTime})
+	this.notes.push( {start:this.onTime, width:elapsed - this.onTime})
 }
 
 

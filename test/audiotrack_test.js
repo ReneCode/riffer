@@ -53,7 +53,22 @@ describe('AudioTrack', function() {
 	})
 
 	it ('gets an empty array without input', function() {
-		expect(at.getTrack()).toEqual([]);
+		expect(at.getTrack().notes).toEqual([]);
+	})
+
+	it ('should calc the length', function() {
+		expect(at.length).toBe(8000);
+	})
+
+	it ('should calc the length', function() {
+		at = new AudioTrack({beatsPerBar:6, bars:2, bpm:180})
+		// 4000 ms =  60/180 * 6 * 2 * 1000
+		expect(at.length).toBe(4000);
+	})
+
+	it ('should return length in getTrack()', function() {
+		var len = at.length;
+		expect(at.getTrack().length).toBe(len);
 	})
 
 	it ('quantize on 1/16 not of 120 bpm', function() {
@@ -72,8 +87,8 @@ describe('AudioTrack', function() {
 			at.on();
 			setTimeout(function() {
 				at.off();
-				var result = at.getTrack();
-				expect(result).toEqual([{start:62, width:94}]);
+				var notes = at.getTrack().notes;
+				expect(notes).toEqual([{start:62, width:94}]);
 				done();
 			}, 100)
 		}, 50);
@@ -90,12 +105,14 @@ describe('AudioTrack', function() {
 					at.on();
 					setTimeout(function() {
 						at.off();
-						var result = at.getTrack();
-						expect(result).toEqual([{start:62, width:94},
-												{start:218, width:188}]);
+						at.stop();
+						expect(at.getTrack()).toEqual(
+									{ length:8000, 
+										 notes:[{start:62, width:94},
+													  {start:218, width:188}
+													  ]
+										});
 						done();
-
-
 					}, 180);
 				}, 60);
 			}, 90)
