@@ -15,11 +15,7 @@ function TrackView(option) {
 
 
 TrackView.prototype.convert = function(track) {
-	var sView = "";
-
-
-	// <rect x="50" y="0" width="20" height="100" fill="brown" />
-
+	var view = [];
 
 	if (track && track.notes) {
 		var height = this.height;
@@ -27,11 +23,16 @@ TrackView.prototype.convert = function(track) {
 		track.notes.forEach(function(n) {
 			var x = Math.floor(n.start * xScale);
 			var w = Math.floor(n.width * xScale);
-			sView += '<rect x="' + x + '" y="0" width="' + w + '" height="' + height + '" fill="blue"/>' 
+			view.push(
+			{	x:x,
+				y:0,
+				width:w,
+				height:height }
+				);
+
 		});
 	}
-
-	return sView;
+	return view;
 };
 
 exports.TrackView = TrackView;

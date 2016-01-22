@@ -33,7 +33,7 @@ function log(msg) {
 
 var cSound, dSound, eSound, fSound, gSound;
 
-var audioTrack = new AudioTrack({bars:1, beatCallback:beatCallback, stopCallback:stopAudioTrack});
+var audioTrack = new AudioTrack({bars:2, beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
 function beatCallback() {
     cSound.play();
@@ -46,14 +46,16 @@ function stopAudioTrack(at) {
     var h = $('#recorder-svg').attr('height');
     var trackView = new TrackView({width:w, height:h});
     var view = trackView.convert(track);
-    console.log(view);
 
+    view.forEach( function(n) {
+        var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
+        for (var attrib in n) {
+            newElement.setAttribute(attrib, n[attrib]);
+        }
 
-    var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
+        $('#recorder-svg').append(newElement);
+    })
 
-    newElement.setAttribute("fill", "#ff0000");
-    newElement.setAttribute("width", "200px");
-    newElement.setAttribute("height", "200px");
 /*    $(newElement).attr("x", "200");
     $(newElement).attr("y", "0");
     $(newElement).attr("width", "200");
@@ -62,7 +64,6 @@ function stopAudioTrack(at) {
 */
 
 
-    $('#recorder-svg').append(newElement);
 }
 
 
@@ -132,6 +133,7 @@ function handleRecord(ev) {
 //    var recorder = new DrawRecorder(4000);  // 4 sec.
 //    recorder.start();
 
+    $('#recorder-svg').empty();
     audioTrack.start();
 
     console.log("record");
