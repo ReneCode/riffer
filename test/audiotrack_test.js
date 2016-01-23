@@ -56,7 +56,7 @@ describe('AudioTrack', function() {
 		expect(at.getTrack().notes).toEqual([]);
 	});
 
-	it ('should calc the length', function() {
+	it ('should calc the default length', function() {
 		expect(at.length).toBe(8000);
 	});
 
@@ -71,45 +71,53 @@ describe('AudioTrack', function() {
 		expect(at.getTrack().length).toBe(len);
 	});
 
-	it ('quantize on 1/16 not of 120 bpm', function() {
-		expect(at.quantysize(3)).toEqual(0);
-		expect(at.quantysize(31)).toEqual(31);
-		expect(at.quantysize(31+15)).toEqual(31);
-		expect(at.quantysize(31+16)).toEqual(62);
-		expect(at.quantysize(3125)).toEqual(3125);
-		expect(at.quantysize(3124)).toEqual(3125);
-		expect(at.quantysize(3126)).toEqual(3125);
+	it ('quantizeTime on 1/16 not of 120 bpm', function() {
+		expect(at.quantysizeTime(3)).toEqual(0);
+		expect(at.quantysizeTime(31)).toEqual(31);
+		expect(at.quantysizeTime(31+15)).toEqual(31);
+		expect(at.quantysizeTime(31+16)).toEqual(62);
+		expect(at.quantysizeTime(3125)).toEqual(3125);
+		expect(at.quantysizeTime(3124)).toEqual(3125);
+		expect(at.quantysizeTime(3126)).toEqual(3125);
+	});
+
+
+	it ('should not quantize if option is false', function() {
+		at = new AudioTrack({quantysize:false});
+		expect(at.quantysizeTime(3)).toEqual(3);
+		expect(at.quantysizeTime(31)).toEqual(31);
+		expect(at.quantysizeTime(31+15)).toEqual(31+15);
+		expect(at.quantysizeTime(31+16)).toEqual(31+16);
 	});
 
 	it ('records single 100 ms on()-event', function(done) {
 		at.start();
 		setTimeout( function() {
-			at.on();
+			at.onNote(1);
 			setTimeout(function() {
-				at.off();
+				at.offNote(1);
 				var notes = at.getTrack().notes;
-				expect(notes).toEqual([{start:62, width:94}]);
+				expect(notes).toEqual([{note:1, start:62, width:94}]);
 				done();
 			}, 100);
 		}, 50);
 	});
 
-
-	it ('records single 100 ms on()-event', function(done) {
+	it ('should records two same notes on/off', function(done) {
 		at.start();
 		setTimeout( function() {
-			at.on();
+			at.onNote(1);
 			setTimeout(function() {
-				at.off();
+				at.offNote(1);
 				setTimeout(function() {
-					at.on();
+					at.onNote(1);
 					setTimeout(function() {
-						at.off();
+						at.offNote(1);
 						at.stop();
 						expect(at.getTrack()).toEqual(
 									{ length:8000, 
-										 notes:[{start:62, width:94},
-													  {start:218, width:188}
+										 notes:[{note:1, start:62, width:94},
+													  {note:1, start:218, width:188}
 													  ]
 										});
 						done();
@@ -118,6 +126,63 @@ describe('AudioTrack', function() {
 			}, 90);
 		}, 60);
 	});
+
+	it ('should records two different notes on/off', function(done) {
+		at.start();
+		setTimeout( function() {
+			at.onNote(1);  		// t=  60 ms -> 62
+			setTimeout(function() {
+				at.onNote(2);   // t = 150 ms -> 156
+				setTimeout(function() {
+					at.offNote(2);  // t = 210 ms 
+					setTimeout(function() {
+						at.offNote(1);  // t = 380 ms
+						at.stop();
+						expect(at.getTrack()).toEqual(
+									{ length:8000, 
+										 notes:[  {note:1, start:62, width:344},
+										 					{note:2, start:156, width:62}
+													  ]
+										});
+						done();
+					}, 180);
+				}, 60);
+			}, 90);
+		}, 60);
+	});
+ 
+
+	it ('should records three different notes on/off', function(done) {
+		at.start();
+		setTimeout( function() {
+			at.onNote(1);  		// t=  60 ms -> 62
+			at.onNote(2);  		// t=  60 ms -> 62
+			at.onNote(3);  		// t=  60 ms -> 62
+			setTimeout(function() {
+				at.offNote(2);   // t = 150 ms -> 156
+				at.onNote(4);
+				setTimeout(function() {
+					at.offNote(1);  // t = 210 ms 
+					at.offNote(3);  // t = 210 ms 
+					setTimeout(function() {
+						at.offNote(4);  // t = 380 ms
+						at.stop();
+						expect(at.getTrack()).toEqual(
+									{ length:8000, 
+										 notes:[  {note:1, start:62, width:156},
+										 					{note:2, start:62, width:94},
+										 					{note:3, start:62, width:156},
+										 					{note:4, start:156, width:250}
+													  ]
+										});
+						done();
+					}, 180);
+				}, 60);
+			}, 90);
+		}, 60);
+	});
+ 
+
 
 
 	it ('should call the beatCallback n times (n depends on bpm)', function(done) {

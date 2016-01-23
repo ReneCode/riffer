@@ -28,7 +28,8 @@ function log(msg) {
 }
 
 
-var cSound, dSound, eSound, fSound, gSound, beepSoundA, beepSoundB;
+var /*cSound, dSound, eSound, fSound, gSound, */ beepSoundA, beepSoundB;
+var soundInstrument = [];
 
 var audioTrack = new AudioTrack({bpm:120, bars:1, beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
@@ -74,12 +75,12 @@ function handleKeySound(selector, sound) {
 }
 
 
-function handleKeySound(selector, sound, handlerOn, handlerOff) {
+function handleKeySound(selector, sound, note, handlerOn, handlerOff) {
     $(selector).on("touchstart mousedown", function(ev) {
         ev.preventDefault();
         sound.play();
     if (handlerOn){
-      handlerOn(sound);
+      handlerOn(note);
     }
     });
 
@@ -87,7 +88,7 @@ function handleKeySound(selector, sound, handlerOn, handlerOff) {
         ev.preventDefault();
         sound.stop();
     if (handlerOff) {
-      handlerOff(sound);
+      handlerOff(note);
     }
     });
 }
@@ -112,38 +113,37 @@ function handlePlay(ev) {
 function playTrack(track) {
     track.notes.forEach( function(note) {
         console.log(note);
-        cSound.play(note.start/1000, note.width/1000);
+        soundInstrument[note.note].play(note.start/1000, note.width/1000);
     });
 }
 
-function handleOn() {
+function handleOn(note) {
     if (audioTrack.recording) {
-        audioTrack.on();
+        audioTrack.onNote(note);
     }
 }
 
 
-function handleOff() {
+function handleOff(note) {
     if (audioTrack.recording) {
-        audioTrack.off();
+        audioTrack.offNote(note);
     }
 }
 
 
 function initialize() {
-	cSound = new AudioSound(audioContext, {url:'sound/c.wav'});
-	dSound = new AudioSound(audioContext, {url:'sound/d.wav'});
-	eSound = new AudioSound(audioContext, {url:'sound/e.wav'});
-	fSound = new AudioSound(audioContext, {url:'sound/f.wav'});
-	gSound = new AudioSound(audioContext, {url:'sound/g.wav'});
+    soundInstrument.push( new AudioSound(audioContext, {url:'sound/c.wav'}) );
+    soundInstrument.push( new AudioSound(audioContext, {url:'sound/d.wav'}) );
+    soundInstrument.push( new AudioSound(audioContext, {url:'sound/e.wav'}) );
+    soundInstrument.push( new AudioSound(audioContext, {url:'sound/f.wav'}) );
+    soundInstrument.push( new AudioSound(audioContext, {url:'sound/g.wav'}) );
     beepSoundA = new AudioBeep(audioContext, {frequency:2300});
     beepSoundB = new AudioBeep(audioContext, {frequency:2000});
 
-    handleKeySound('#ckey', cSound, handleOn, handleOff);
-    handleKeySound('#dkey', dSound, handleOn, handleOff);
-    handleKeySound('#ekey', eSound, handleOn, handleOff);
-    handleKeySound('#fkey', fSound, handleOn, handleOff);
-    handleKeySound('#gkey', gSound, handleOn, handleOff);    
+    var selectors = ['#ckey', '#dkey', '#ekey', '#fkey', '#gkey'];
+    for (var i=0; i<selectors.length; i++) {
+        handleKeySound(selectors[i], soundInstrument[i], i, handleOn, handleOff);
+    }
 
     $('#record').on("touchstart click", handleRecord);
     $('#play').on("touchstart click", handlePlay);

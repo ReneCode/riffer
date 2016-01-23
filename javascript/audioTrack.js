@@ -6,7 +6,9 @@ function AudioTrack(option) {
 			bpm: 120,					// 120 beats per minute
 			maxNoteRatio: 16,	// min note is 1/16
 			bars: 4,					// number of bars
-			beatsPerBar: 4		// beats per bar
+			beatsPerBar: 4,		// beats per bar
+			numNotes: 10,
+			quantysize: true
 		};
 	}
 	this.running = false;
@@ -16,6 +18,11 @@ function AudioTrack(option) {
 	this.maxNoteRatio = option.maxNoteRatio || 16;
 	this.bars = option.bars || 4;
 	this.beatsPerBar = option.beatsPerBar || 4;
+	if (option.hasOwnProperty('quantysize')) {
+		this.quantysize = option.quantysize;
+	} else {
+		this.quantysize = true;
+	}
 	this.stopCallback = option.stopCallback;
 	this.beatCallback = option.beatCallback;
 	// in ms
@@ -54,6 +61,7 @@ AudioTrack.prototype.start = function() {
 	"use strict";
 	this.startTime = (new Date().getTime());
 	this.notes = [];
+	this.onTime = {};
 	this.recording = true;
 	this.beatCounter = 0;
 	setTimeout( this.stop.bind(this), this.length );
@@ -64,32 +72,54 @@ AudioTrack.prototype.start = function() {
 };
 
 AudioTrack.prototype.getTrack = function() {
-	return {length:this.length, notes:this.notes};
-};
+	"use strict";
 
-AudioTrack.prototype.on = function() {
-	this.onTime = this.elapsed();
-//	console.log("start:", this.start);
-};
+	function cmp(a,b) {
+		if (a.start < b.start) {
+			return -1;
+		} else if (a.start > b.start) {
+			return 1;
+		} else {
+			if (a.note < b.note) {
+				return -1;
+			} else if (a.note > b.note) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
 
+	return {length:this.length, notes:this.notes.sort(cmp)};
+};
 
 AudioTrack.prototype.elapsed = function() {
 	var elapsed = new Date().getTime() - this.startTime;
-	return this.quantysize(elapsed);
+	return this.quantysizeTime(elapsed);
 };
 
-AudioTrack.prototype.quantysize = function(time) {
-	var mod = time % this.quant;
-	time -= mod;
-	if (mod >= this.quant/2) {
-		time += this.quant;
+AudioTrack.prototype.quantysizeTime = function(time) {
+	"use strict";
+	if (this.quantysize) {
+		var mod = time % this.quant;
+		time -= mod;
+		if (mod >= this.quant/2) {
+			time += this.quant;
+		}
+		return Math.floor(time);
 	}
-	return Math.floor(time);
+	else {
+		return time;
+	}
 };
 
-AudioTrack.prototype.off = function() {
+AudioTrack.prototype.onNote = function(note) {
+	this.onTime[note] = this.elapsed();
+};
+
+AudioTrack.prototype.offNote = function(note) {
 	var elapsed = this.elapsed();
-	this.notes.push( {start:this.onTime, width:elapsed - this.onTime});
+	this.notes.push( {note:note, start:this.onTime[note], width:elapsed - this.onTime[note]});
 };
 
 

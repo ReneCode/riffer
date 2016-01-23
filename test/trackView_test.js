@@ -38,5 +38,14 @@ describe('TrackView', function() {
 									{x:40, y:0, width:10, height:80}]);
 	});
 
+	it('should convert two overlapping notes', function() {
+		var at = { length:8000, 
+							 notes:[  {note:0, start:100, width:100},
+							 					{note:1, start:150, width:100}
+										  ] 	};
+		var svg = tv.convert(at);
+		expect(svg).toEqual([	{ x:20, y:40, width:20, height:40 },
+													{ y:30, y:0, width:20, height:40 }]);
+	});
 
 });
