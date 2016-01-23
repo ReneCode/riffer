@@ -23,7 +23,6 @@ function AudioBeep(audioContext, option) {
 	this.gainNode.connect(audioContext.destination);
 
 	this.osc.start(audioContext.currentTime);
-
 }
 
 AudioBeep.prototype.play = function(duration) {
