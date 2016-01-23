@@ -12,6 +12,14 @@ body {
   stroke: black;
 }
 
-.record {
-	
+
+
+#cursor {
+	animation: ball 4s linear;
 }
+
+@keyframes ball {
+    from  { transform: translateX(0)      }
+    to    { transform: translateX(400px)  }
+}
+

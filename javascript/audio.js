@@ -31,7 +31,7 @@ function log(msg) {
 var /*cSound, dSound, eSound, fSound, gSound, */ beepSoundA, beepSoundB;
 var soundInstrument = [];
 
-var audioTrack = new AudioTrack({bpm:120, bars:2, beatCallback:beatCallback, stopCallback:stopAudioTrack});
+var audioTrack = new AudioTrack({bpm:120, bars:2, _beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
 function beatCallback(first) {
     if (first) {
@@ -98,6 +98,7 @@ function handleKeySound(selector, sound, note, handlerOn, handlerOff) {
 function handleRecord(ev) {
     ev.preventDefault();
     $('#recorder-svg').empty();
+    startCursor();
     audioTrack.start();
 }
  
@@ -106,9 +107,23 @@ function handlePlay(ev) {
 
 
    var track = audioTrack.getTrack();
+   startCursor();
    playTrack(track);
 }
 
+function startCursor() {
+    var cursor = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
+    cursor.setAttribute("x", 0);
+    cursor.setAttribute("y", -5);
+    cursor.setAttribute("width", 3);
+    cursor.setAttribute("height", 105);
+    cursor.setAttribute("fill", "orange");
+    cursor.setAttribute("id", "cursor");
+
+    $('#recorder-svg').append(cursor);
+    $('.cursor').addClass('cursor');
+
+}
 
 function playTrack(track) {
     track.notes.forEach( function(note) {
