@@ -9,14 +9,15 @@ function handleError(err) {
 
 
 gulp.task('browserify', function() {
-  return gulp.
-    src('./javascript/audio.js').
-    pipe(browserify()).
-    pipe(gulp.dest('./bin'));
+  gulp.src('./javascript/audio.js')
+    .pipe(browserify())
+    .pipe(gulp.dest('./bin'))
+    .on('error', handleError);
 });
 
 gulp.task('watch-browserify', function() {
-	gulp.watch(['./javascript/*.js'], ['browserify']);
+	gulp.watch(['./javascript/*.js'], ['browserify'])
+		.on('error', handleError);
 });
 
 gulp.task('test', function() {
@@ -26,7 +27,8 @@ gulp.task('test', function() {
 });
 
 gulp.task('watch', ['test'], function() {
-	gulp.watch(['./test/*.js', './javascript/*.js'], ['test']);
+	gulp.watch(['./test/*.js', './javascript/*.js'], ['test'])
+		.on('error', handleError);
 });
 
 

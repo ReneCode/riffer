@@ -31,7 +31,7 @@ function log(msg) {
 var /*cSound, dSound, eSound, fSound, gSound, */ beepSoundA, beepSoundB;
 var soundInstrument = [];
 
-var audioTrack = new AudioTrack({bpm:120, bars:1, beatCallback:beatCallback, stopCallback:stopAudioTrack});
+var audioTrack = new AudioTrack({bpm:120, bars:2, beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
 function beatCallback(first) {
     if (first) {

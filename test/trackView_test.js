@@ -39,13 +39,38 @@ describe('TrackView', function() {
 	});
 
 	it('should convert two overlapping notes', function() {
-		var at = { length:8000, 
+		var at = { length:2000, 
 							 notes:[  {note:0, start:100, width:100},
 							 					{note:1, start:150, width:100}
 										  ] 	};
 		var svg = tv.convert(at);
-		expect(svg).toEqual([	{ x:20, y:40, width:20, height:40 },
-													{ y:30, y:0, width:20, height:40 }]);
+		expect(svg).toEqual([	{ fill:'#24106b', x:20, y:40, width:20, height:40 },
+													{ fill:'#9bf0be', x:30, y:0, width:20, height:40 }]);
 	});
+
+	it('should convert two overlapping and one single notes', function() {
+		var at = { length:2000, 
+							 notes:[  {note:0, start:100, width:100},
+							 					{note:1, start:150, width:100},
+							 					{note:1, start:400, width:50},
+										  ] 	};
+		var svg = tv.convert(at);
+		expect(svg).toEqual([	{ fill:'#24106b', x:20, y:40, width:20, height:40 },
+													{ fill:'#9bf0be', x:30, y:0, width:20, height:40 },
+													{ fill:'#9bf0be', x:80, y:0, width:10, height:80 }
+													]);
+	});
+
+	it('should convert two notes just behing each other', function() {
+		var at = { length:2000, 
+							 notes:[  {note:0, start:100, width:100},
+							 					{note:1, start:200, width:100},
+										  ] 	};
+		var svg = tv.convert(at);
+		expect(svg).toEqual([	{ fill:'#24106b', x:20, y:0, width:20, height:80 },
+													{ fill:'#9bf0be', x:40, y:0, width:20, height:80 }
+													]);
+	});
+
 
 });
