@@ -17,9 +17,9 @@ if (AudioContext) {
 
 var AudioContext = require('./audioContext');
 var AudioTrack = require('./audioTrack').AudioTrack;
-var AudioSound = require('./AudioSound').AudioSound;
-var TrackView = require('./TrackView').TrackView;
-var AudioBeep = require('./AudioBeep').AudioBeep;
+var AudioSound = require('./audioSound').AudioSound;
+var TrackView = require('./trackView').TrackView;
+var AudioBeep = require('./audioBeep').AudioBeep;
 
 var audioContext = AudioContext.create();
 
