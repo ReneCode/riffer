@@ -20,6 +20,8 @@ var AudioTrack = require('./audioTrack').AudioTrack;
 var AudioSound = require('./audioSound').AudioSound;
 var TrackView = require('./trackView').TrackView;
 var AudioBeep = require('./audioBeep').AudioBeep;
+var MessageList = require('./messageList').MessageList;
+var Utility = require('./utility');
 
 var audioContext = AudioContext.create();
 
@@ -27,7 +29,7 @@ function log(msg) {
 	console.log(msg);
 }
 
-
+var messageList = new MessageList();
 var /*cSound, dSound, eSound, fSound, gSound, */ beepSoundA, beepSoundB;
 var soundInstrument = [];
 
@@ -42,12 +44,9 @@ function beatCallback(first) {
     }
  }
 
-// get recorded Track and show it as SVG
-function stopAudioTrack(at) {
-    var track = at.getTrack();
-
-    var w = $('#recorder-svg').attr('width');
-    var h = $('#recorder-svg').attr('height');
+function displayTrackInSVG(svgSelector, track) {
+    var w = $(svgSelector).attr('width');
+    var h = $(svgSelector).attr('height');
     var trackView = new TrackView({width:w, height:h});
     var view = trackView.convert(track);
 
@@ -57,8 +56,15 @@ function stopAudioTrack(at) {
             newElement.setAttribute(attrib, n[attrib]);
         }
 
-        $('#recorder-svg').append(newElement);
+        $(svgSelector).append(newElement);
     });
+
+}
+
+// get recorded Track and show it as SVG
+function stopAudioTrack(at) {
+    var track = at.getTrack();
+    displayTrackInSVG('#recorder-svg', track);
 }
 
 
@@ -95,22 +101,6 @@ function handleKeySound(selector, sound, note, handlerOn, handlerOff) {
 
 
 
-function handleRecord(ev) {
-    ev.preventDefault();
-    $('#recorder-svg').empty();
-    startCursor();
-    audioTrack.start();
-}
- 
-function handlePlay(ev) {
-    ev.preventDefault();
-
-
-   var track = audioTrack.getTrack();
-   startCursor();
-   playTrack(track);
-}
-
 function startCursor() {
     var cursor = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
     cursor.setAttribute("x", 0);
@@ -146,6 +136,72 @@ function handleOff(note) {
 }
 
 
+function appendMessageList(track) {
+    var url = Utility.getApiHost() + '/api/v1/riff';
+
+    var riff = { userid: "a",
+                 date: new Date(),
+                 data: track };
+    $.ajax( {
+        url: url,
+        type: 'POST',
+        data: JSON.stringify(riff),
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8",
+        success: function(res) {
+            console.dir(res);
+            var svgSelector = addTrackToDOM(res.data);
+            displayTrackInSVG(svgSelector, track);
+            $('#recorder-svg').empty();
+        }
+    });
+
+}
+
+function addTrackToDOM(track)
+{
+    var idMsg = messageList.append(track);
+    var divId = 'msg' + idMsg;
+    var svgId = 'svg' + idMsg;
+
+    $('#messagelist').append( $('<div>')
+        .addClass('well')
+        .attr('id', divId)
+    );
+
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg'); 
+    svg.setAttribute("class", 'msg-svg');
+    svg.setAttribute("width", 400);
+    svg.setAttribute("height", 100);
+    svg.setAttribute("id", svgId);
+    $('#' + divId).append(svg);
+
+    return '#' + svgId;
+}
+
+
+function handleRecord(ev) {
+    ev.preventDefault();
+
+    $('#recorder-svg').empty();
+    startCursor();
+    audioTrack.start();
+}
+ 
+function handlePlay(ev) {
+    ev.preventDefault();
+    var track = audioTrack.getTrack();
+    startCursor();
+    playTrack(track);
+}
+
+function handleSend(ev) {
+    ev.preventDefault();
+    var track = audioTrack.getTrack();
+
+    var svgSelector = appendMessageList(track);
+}
+
 function initialize() {
     soundInstrument.push( new AudioSound(audioContext, {url:'sound/c.wav'}) );
     soundInstrument.push( new AudioSound(audioContext, {url:'sound/d.wav'}) );
@@ -163,7 +219,7 @@ function initialize() {
     $('#record').on("touchstart click", handleRecord);
     $('#play').on("touchstart click", handlePlay);
 
-//    handleKey('#ckey', handleOn, handleOff)
+    $('#send').on("touchstart click", handleSend);
 
 }
 

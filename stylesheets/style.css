@@ -2,6 +2,16 @@ body {
     padding: 50px;
 }
 
+#send {
+	position: relative;
+	left: 0px;
+	bottom: 50px;
+}
+
+.msg-svg {
+	border:1px solid black;
+}
+
 .nv {
   fill: gray;
   stroke: black;

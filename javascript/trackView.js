@@ -62,7 +62,9 @@ TrackView.prototype.convert = function(track) {
 				}
 			}
 		}
-		blocks.push(block);
+		if (block) {
+			blocks.push(block);
+		}
 	}
 
 	fillBlocks();

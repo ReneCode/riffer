@@ -29,37 +29,27 @@
       </div>
       <div class="col-sm-8">
         <h2>Messages</h2>
-        <div class="well">
-          <div class="btn-toolbar" role="toolbar">
-            <div class="btn-group btn-group-lg" role="group">
-              <button id="ckey" type="button" class="btn btn-info"> C </button>
-              <button id="dkey" type="button" class="btn btn-info"> D </button>
-              <button id="ekey" type="button" class="btn btn-info"> E </button>
-              <button id="fkey" type="button" class="btn btn-info"> F </button>
-              <button id="gkey" type="button" class="btn btn-info"> G </button>
+        <div id="messagelist">
+        </div>
+        <div>
+          <div class="well">
+            <div class="btn-toolbar" role="toolbar">
+              <div class="btn-group btn-group-lg" role="group">
+                <button id="ckey" type="button" class="btn btn-info"> C </button>
+                <button id="dkey" type="button" class="btn btn-info"> D </button>
+                <button id="ekey" type="button" class="btn btn-info"> E </button>
+                <button id="fkey" type="button" class="btn btn-info"> F </button>
+                <button id="gkey" type="button" class="btn btn-info"> G </button>
+              </div>
+              <div class="btn-group btn-group-lg" role="group">
+                <button id="record" class="btn btn-default" role="button"><i class="fa fa-dot-circle-o fa-2x"></i></button>
+                <button id="play" class="btn btn-default" role="button"><i class="fa fa-play fa-2x"></i></button>
+              </div>
             </div>
-            <div class="btn-group btn-group-lg" role="group">
-              <button id="record" class="btn btn-default" role="button"><i class="fa fa-dot-circle-o fa-2x"></i></button>
-              <button id="play" class="btn btn-default" role="button"><i class="fa fa-play fa-2x"></i></button>
-            </div>
+            <svg id="recorder-svg" class="msg-svg" width="400", height="100">
+            </svg>
+            <button id="send" class="btn btn-default" role="button"><i class="fa fa-send fa-2x pull-right"></i></button>
           </div>
-        </div>
-        <div class="well">
-          <svg id="recorder-svg" style="border:1px solid black;" width="400", height="100" background-color="yellow" fill-opacity:"0.5">
-          </svg>
-          <button id="send" class="btn btn-default" role="button"><i class="fa fa-send fa-2x pull-right"></i></button>
-
-        </div>
-        <div class="well">
-          <p>Normal HTML here.</p>
-          <svg id="draw" style="border:1px solid black;" width="400", height="100" background-color="yellow" fill-opacity:"0.5">
-            <rect class="nv" x="0" y="0" width="20" height="100"/>
-            <rect x="50" y="0" width="20" height="100" fill="brown" />
-            <rect x="80" y="0" width="50" height="100" fill="red" />
-            <rect x="160" y="0" width="50" height="100" fill="blue" />
-            <rect x="230" y="0" width="40" height="100" fill="yellow" />
-            <rect class="ny" x="280" y="0" width="20" height="100"/>
-          </svg>
         </div>
       </div>
     </div>
