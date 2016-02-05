@@ -4,6 +4,7 @@ var browserify = require('gulp-browserify');
 
 
 function handleError(err) {
+	console.log("---- \=/ -----");
 	console.log(err.toString());
 }
 
@@ -11,8 +12,9 @@ function handleError(err) {
 gulp.task('browserify', function() {
   gulp.src('./javascript/audio.js')
     .pipe(browserify())
+    .on('error', handleError) 
     .pipe(gulp.dest('./bin'))
-    .on('error', handleError);
+    .on('error', handleError); 
 });
 
 gulp.task('watch-browserify', function() {

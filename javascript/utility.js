@@ -22,6 +22,4 @@ function getApiHost() {
 	},
 */
 
-
-
 exports.getApiHost = getApiHost;

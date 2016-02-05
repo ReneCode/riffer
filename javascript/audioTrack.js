@@ -57,6 +57,15 @@ AudioTrack.prototype.beat = function() {
 	}
 };
 
+AudioTrack.prototype.clear = function() {
+	"use strict";
+	this.notes = [];
+}
+
+AudioTrack.prototype.isEmpty = function() {
+	return this.notes.length == 0;
+};
+
 AudioTrack.prototype.start = function() {
 	"use strict";
 	this.startTime = (new Date().getTime());

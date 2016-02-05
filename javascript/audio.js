@@ -15,13 +15,13 @@ if (AudioContext) {
 }
 */
 
+
 var AudioContext = require('./audioContext');
 var AudioTrack = require('./audioTrack').AudioTrack;
 var AudioSound = require('./audioSound').AudioSound;
 var TrackView = require('./trackView').TrackView;
 var AudioBeep = require('./audioBeep').AudioBeep;
 var MessageList = require('./messageList').MessageList;
-var Utility = require('./utility');
 
 var audioContext = AudioContext.create();
 
@@ -29,11 +29,12 @@ function log(msg) {
 	console.log(msg);
 }
 
+
 var messageList = new MessageList();
 var /*cSound, dSound, eSound, fSound, gSound, */ beepSoundA, beepSoundB;
 var soundInstrument = [];
 
-var audioTrack = new AudioTrack({bpm:120, bars:2, _beatCallback:beatCallback, stopCallback:stopAudioTrack});
+var audioTrack = new AudioTrack({bpm:120, bars:1, beatsPerBar:4, beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
 function beatCallback(first) {
     if (first) {
@@ -136,31 +137,10 @@ function handleOff(note) {
 }
 
 
-function appendMessageList(track) {
-    var url = Utility.getApiHost() + '/api/v1/riff';
 
-    var riff = { userid: "a",
-                 date: new Date(),
-                 data: track };
-    $.ajax( {
-        url: url,
-        type: 'POST',
-        data: JSON.stringify(riff),
-        dataType: 'JSON',
-        contentType: "application/json; charset=utf-8",
-        success: function(res) {
-            console.dir(res);
-            var svgSelector = addTrackToDOM(res.data);
-            displayTrackInSVG(svgSelector, track);
-            $('#recorder-svg').empty();
-        }
-    });
-
-}
-
-function addTrackToDOM(track)
+function addTrackToDOM(riff)
 {
-    var idMsg = messageList.append(track);
+    var idMsg = riff._id;
     var divId = 'msg' + idMsg;
     var svgId = 'svg' + idMsg;
 
@@ -197,9 +177,17 @@ function handlePlay(ev) {
 
 function handleSend(ev) {
     ev.preventDefault();
-    var track = audioTrack.getTrack();
-
-    var svgSelector = appendMessageList(track);
+    if (!audioTrack.isEmpty()) {
+        var track = audioTrack.getTrack();
+        messageList.append("x", track, function(riff) {
+            // anzeigen
+            var svgSelector = addTrackToDOM(riff);
+            displayTrackInSVG(svgSelector, riff.data);
+            // current löschen
+            audioTrack.clear();
+            $('#recorder-svg').empty();
+        });
+    }
 }
 
 function initialize() {

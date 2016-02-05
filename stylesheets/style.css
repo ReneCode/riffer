@@ -25,10 +25,10 @@ body {
 
 
 #cursor {
-	animation: ball 4s linear;
+	animation: move 2s linear;
 }
 
-@keyframes ball {
+@keyframes move {
     from  { transform: translateX(0)      }
     to    { transform: translateX(400px)  }
 }
