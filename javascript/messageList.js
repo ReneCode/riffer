@@ -20,22 +20,28 @@ MessageList.prototype.append = function(user, track, callback) {
       success: function(result) {
         console.dir("gespeichert");
 				self.list.push(result);
-//				return this.list.length-1;
 				// track zurückgeben.
 				if (callback) {
 					callback(result);
 				}
       }
   });
-
-
-
-
 };
 
 
-MessageList.prototype.method_name = function(first_argument) {
-	// body...
+// load the last messages from the server
+MessageList.prototype.load = function(callback) {
+  var url = Utility.getApiHost() + '/api/v1/riff';
+	$.ajax( {
+		url: url,
+		type: 'GET',
+		success: function(result) {
+			if (callback) {
+				callback(result);
+			}
+		}
+
+	})
 };
 
 exports.MessageList = MessageList;

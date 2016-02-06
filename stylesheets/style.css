@@ -12,6 +12,11 @@ body {
 	border:1px solid black;
 }
 
+#messagelist {
+  overflow: auto;
+  height: 400px;
+}
+
 .nv {
   fill: gray;
   stroke: black;

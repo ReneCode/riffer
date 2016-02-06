@@ -34,7 +34,7 @@ var messageList = new MessageList();
 var /*cSound, dSound, eSound, fSound, gSound, */ beepSoundA, beepSoundB;
 var soundInstrument = [];
 
-var audioTrack = new AudioTrack({bpm:120, bars:1, beatsPerBar:4, beatCallback:beatCallback, stopCallback:stopAudioTrack});
+var audioTrack = new AudioTrack({bpm:120, bars:1, beatsPerBar:4, _beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
 function beatCallback(first) {
     if (first) {
@@ -145,7 +145,7 @@ function addTrackToDOM(riff)
     var svgId = 'svg' + idMsg;
 
     $('#messagelist').append( $('<div>')
-        .addClass('well')
+        .addClass('message')
         .attr('id', divId)
     );
 
@@ -158,6 +158,8 @@ function addTrackToDOM(riff)
 
     return '#' + svgId;
 }
+
+
 
 
 function handleRecord(ev) {
@@ -190,6 +192,12 @@ function handleSend(ev) {
     }
 }
 
+function handlePlayMessage(ev) {
+    ev.preventDefault();
+
+    console.log("play");
+}
+
 function initialize() {
     soundInstrument.push( new AudioSound(audioContext, {url:'sound/c.wav'}) );
     soundInstrument.push( new AudioSound(audioContext, {url:'sound/d.wav'}) );
@@ -208,6 +216,15 @@ function initialize() {
     $('#play').on("touchstart click", handlePlay);
 
     $('#send').on("touchstart click", handleSend);
+
+    messageList.load(function(riffs){
+        for (var i=0; i<riffs.length; i++) {
+            var svgSelector = addTrackToDOM(riffs[i]);
+            displayTrackInSVG(svgSelector, riffs[i].data);
+        }
+    });
+
+    $('.msg-svg').on("touchstart click", handlePlayMessage);
 
 }
 
