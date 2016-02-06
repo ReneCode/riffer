@@ -1,5 +1,14 @@
 body {
-    padding: 50px;
+    padding: 10px;
+}
+
+
+_div {
+  border: 1px solid gray;
+}
+
+#status {
+  color: red;
 }
 
 #send {

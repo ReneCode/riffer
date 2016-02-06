@@ -45,6 +45,10 @@ function beatCallback(first) {
     }
  }
 
+function showStatus(text) {
+    $('#status').html(text);
+}
+
 function displayTrackInSVG(svgSelector, track) {
     var w = $(svgSelector).attr('width');
     var h = $(svgSelector).attr('height');
@@ -188,6 +192,7 @@ function handleSend(ev) {
             // current löschen
             audioTrack.clear();
             $('#recorder-svg').empty();
+            $('#messagelist').animate({ scrollTop: 9999 }, 'slow');
         });
     }
 }
@@ -196,6 +201,47 @@ function handlePlayMessage(ev) {
     ev.preventDefault();
 
     console.log("play");
+}
+
+
+function appendMessageList(riffs) {
+    for (var i=0; i<riffs.length; i++) {
+        var svgSelector = addTrackToDOM(riffs[i]);
+        displayTrackInSVG(svgSelector, riffs[i].data);
+    }
+    $('#messagelist').animate({ scrollTop: 9999 }, 'fast');
+}
+
+function reloadMessageList() {
+    $('#messagelist').empty();
+
+    messageList.loadAll(function(riffs){
+        // success
+        appendMessageList(riffs);
+    },
+    function() {
+        // error
+        showStatus("error loading riffs from server");
+    });
+
+}
+
+function checkReloadMessageList() {
+    if (audioTrack.recording) {
+        // no refresh on recording
+        return;
+    }
+    console.log("reload messagelist");
+    messageList.loadNew(function(riffs){
+        // success
+        if (riffs.length > 0) {
+            appendMessageList(riffs);
+        }
+    },
+    function() {
+        // error
+        showStatus("error loading riffs from server");
+    });
 }
 
 function initialize() {
@@ -217,14 +263,12 @@ function initialize() {
 
     $('#send').on("touchstart click", handleSend);
 
-    messageList.load(function(riffs){
-        for (var i=0; i<riffs.length; i++) {
-            var svgSelector = addTrackToDOM(riffs[i]);
-            displayTrackInSVG(svgSelector, riffs[i].data);
-        }
-    });
-
     $('.msg-svg').on("touchstart click", handlePlayMessage);
+
+    reloadMessageList();
+
+    // reload every 5 seconds
+    setInterval(checkReloadMessageList, 5*1000);
 
 }
 
