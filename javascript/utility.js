@@ -13,7 +13,7 @@ function getApiHost() {
 	  // =>   different service / look at .htaccess !
 	  // remove the subdomain
 	  host = host.match(/[^\.]*\.[^.]*$/)[0];
-	  apiHost = location.protocol + "://rifferapi." + host;
+	  apiHost = location.protocol + "//rifferapi." + host;
 /*	  var port = location.port;
 	  if (port) {
 	    apiHost += ":" + port;
