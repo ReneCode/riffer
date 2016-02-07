@@ -49,6 +49,12 @@ function showStatus(text) {
     $('#status').html(text);
 }
 
+
+function getDisplayDate(riff) {
+    var dt = new Date(riff.date);
+    return dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
+}
+
 function displayTrackInSVG(svgSelector, track) {
     var w = $(svgSelector).attr('width');
     var h = $(svgSelector).attr('height');
@@ -63,6 +69,15 @@ function displayTrackInSVG(svgSelector, track) {
 
         $(svgSelector).append(newElement);
     });
+}
+
+function displayRiffInSVG(svgSelector, riff) {
+    displayTrackInSVG(svgSelector, riff.data);
+    var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'text'); 
+    newElement.setAttribute('x', '10');
+    newElement.setAttribute('y', '20');
+    newElement.innerHTML = riff.userid + " " + getDisplayDate(riff);
+    $(svgSelector).append(newElement);
 
 }
 
@@ -188,7 +203,7 @@ function handleSend(ev) {
         messageList.append("x", track, function(riff) {
             // anzeigen
             var svgSelector = addTrackToDOM(riff);
-            displayTrackInSVG(svgSelector, riff.data);
+            displayRiffInSVG(svgSelector, riff);
             // current löschen
             audioTrack.clear();
             $('#recorder-svg').empty();
@@ -207,7 +222,7 @@ function handlePlayMessage(ev) {
 function appendMessageList(riffs) {
     for (var i=0; i<riffs.length; i++) {
         var svgSelector = addTrackToDOM(riffs[i]);
-        displayTrackInSVG(svgSelector, riffs[i].data);
+        displayRiffInSVG(svgSelector, riffs[i]);
     }
     $('#messagelist').animate({ scrollTop: 9999 }, 'fast');
 }
