@@ -18,12 +18,12 @@ _div {
 }
 
 .msg-svg {
-	border:1px solid #222;
-  box-shadow: 1px 1px 3px #4f4f4f;
+	_border:1px solid #222;
+  _box-shadow: 1px 1px 3px #4f4f4f;
 }
 
 .msg-svg > rect {
-  fill-opacity: 70%;
+  _fill-opacity: 70%;
 }
 
 #messagelist {

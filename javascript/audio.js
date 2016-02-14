@@ -16,6 +16,9 @@ if (AudioContext) {
 */
 
 
+var svgns = "http://www.w3.org/2000/svg";
+var xlinkns = 'http://www.w3.org/1999/xlink';
+
 var AudioContext = require('./audioContext');
 var AudioTrack = require('./audioTrack').AudioTrack;
 var AudioSound = require('./audioSound').AudioSound;
@@ -36,6 +39,16 @@ var soundInstrument = [];
 
 var audioTrack = new AudioTrack({bpm:120, bars:1, beatsPerBar:4, _beatCallback:beatCallback, stopCallback:stopAudioTrack});
 
+
+function getUserId() {
+    var username = $('#username').val();
+    if (!username) {
+        username = "guest";
+    }
+    return username;
+}
+
+
 function beatCallback(first) {
     if (first) {
         beepSoundA.play();    
@@ -52,7 +65,7 @@ function showStatus(text) {
 
 function getDisplayDate(riff) {
     var dt = new Date(riff.date);
-    return dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
+    return /*dt.toLocaleDateString() + " " + */ dt.toLocaleTimeString();
 }
 
 function displayTrackInSVG(svgSelector, track) {
@@ -62,7 +75,7 @@ function displayTrackInSVG(svgSelector, track) {
     var view = trackView.convert(track);
 
     view.forEach( function(n) {
-        var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
+        var newElement = document.createElementNS(svgns, 'rect'); 
         for (var attrib in n) {
             newElement.setAttribute(attrib, n[attrib]);
         }
@@ -73,7 +86,7 @@ function displayTrackInSVG(svgSelector, track) {
 
 function displayRiffInSVG(svgSelector, riff) {
     displayTrackInSVG(svgSelector, riff.data);
-    var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'text'); 
+    var newElement = document.createElementNS(svgns, 'text'); 
     newElement.setAttribute('x', '10');
     newElement.setAttribute('y', '20');
     newElement.innerHTML = riff.userid + " " + getDisplayDate(riff);
@@ -122,11 +135,11 @@ function handleKeySound(selector, sound, note, handlerOn, handlerOff) {
 
 
 function startCursor() {
-    var cursor = document.createElementNS("http://www.w3.org/2000/svg", 'rect'); 
+    var cursor = document.createElementNS(svgns, 'rect'); 
     cursor.setAttribute("x", 0);
-    cursor.setAttribute("y", -5);
+    cursor.setAttribute("y", 0);
     cursor.setAttribute("width", 3);
-    cursor.setAttribute("height", 105);
+    cursor.setAttribute("height", 100);
     cursor.setAttribute("fill", "orange");
     cursor.setAttribute("id", "cursor");
 
@@ -155,6 +168,9 @@ function handleOff(note) {
     }
 }
 
+function isMyRiff(riff) {
+    return getUserId() == riff.userid;
+}
 
 
 function addTrackToDOM(riff)
@@ -168,17 +184,47 @@ function addTrackToDOM(riff)
         .attr('id', divId)
     );
 
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg'); 
+    var svgParent = document.createElementNS(svgns, 'svg'); 
+    svgParent.setAttribute("width", 440);
+    svgParent.setAttribute("height", 100);
+    $('#' + divId).append(svgParent);
+
+    var svg = document.createElementNS(svgns, 'svg'); 
     svg.setAttribute("class", 'msg-svg');
+    svg.setAttribute("x", 20);
+    svg.setAttribute("y", 0);
     svg.setAttribute("width", 400);
     svg.setAttribute("height", 100);
     svg.setAttribute("id", svgId);
-    $('#' + divId).append(svg);
+    svgParent.appendChild(svg);
+
+    var gradientId = '#other';
+    var sayId = '#sayother';
+    if (isMyRiff(riff)) {
+        gradientId = '#me';
+        sayId = '#sayme';
+    }
+
+    var use = document.createElementNS(svgns, 'use'); 
+    // very important: use the xlink namespace !!
+    use.setAttributeNS(xlinkns, "href", sayId);
+    svgParent.appendChild(use);
+
+    var rect = document.createElementNS(svgns, 'rect'); 
+    rect.setAttribute("width", 400);
+    rect.setAttribute("height", 100);
+    rect.setAttribute("fill", "url('"+ gradientId + "')");
+    svg.appendChild(rect);
 
     return '#' + svgId;
 }
 
 
+function handleRefresh(ev) {
+    ev.preventDefault();
+
+    reloadMessageList();
+}
 
 
 function handleRecord(ev) {
@@ -200,7 +246,8 @@ function handleSend(ev) {
     ev.preventDefault();
     if (!audioTrack.isEmpty()) {
         var track = audioTrack.getTrack();
-        messageList.append("x", track, function(riff) {
+        var userid = getUserId();
+        messageList.append(userid, track, function(riff) {
             // anzeigen
             var svgSelector = addTrackToDOM(riff);
             displayRiffInSVG(svgSelector, riff);
@@ -277,6 +324,7 @@ function initialize() {
     $('#play').on("touchstart click", handlePlay);
 
     $('#send').on("touchstart click", handleSend);
+    $('#refresh').on("touchstart click", handleRefresh);
 
     $('.msg-svg').on("touchstart click", handlePlayMessage);
 
